@@ -1,0 +1,25 @@
+panel-toplevel.background.horizontal,
+.mate-panel-menu-bar,
+#clock-applet-button,
+#clock-applet-button:hover  {
+	color: white;
+}
+
+panel-toplevel.background.horizontal,
+.mate-panel-menu-bar,
+#clock-applet-button,
+#clock-applet-button:hover  {
+   color: white;
+}
+#tasklist-button {
+	color: white;
+}
+
+#PanelApplet label,
+.mate-panel-menu-bar menubar > menuitem {
+    color: white;
+    text-shadow: 1px 1px alpha (#000000, 0.8);
+}
+
+#color: #F7347A;
+
