@@ -5,38 +5,47 @@ user=$USER
 home=$HOME
 
 # Entering sudo mode
+echo "Upgrading"
 sudo su - <<EOF
 dnf upgrade -y  2>> errors.txt
 
 # base packages
+echo "Installing base packages"
 dnf install -y git zsh zsh-syntax-highlighting zsh-autosuggestions tilix duf pidgin cairo-dock htop conky exa ncdu bat onedrive python3-pip samba 2>> errors.txt
 
 # notepadqq dependencies
+echo "Installing notepadqq dependencies"
 dnf install -y qt5-qtbase-devel qt5-qttools-devel qt5-qtwebengine-devel qt5-qtwebsockets-devel qt5-qtsvg-devel uchardet uchardet-devel qt5-qtwebchannel-devel pkgconfig 2>> errors.txt
 
 # pidgin dependencies
+echo "Installing pidgin dependencies"
 dnf install -y json-glib-devel libpurple-devel glib2-devel libpurple-devel protobuf-c-devel protobuf-c-compiler
 
 # oh-my-posh
+echo "Downloading oh-my-posh"
 wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/posh-linux-amd64 -O /usr/local/bin/oh-my-posh
 chmod +x /usr/local/bin/oh-my-posh
 
 # Conky config file
+echo "Configuring conky"
 cp /etc/conky/conky.conf /etc/conky/conky.conf.bak
 rm /etc/conky/conky.conf
 wget 'https://github.com/abyss6166/fedorainstall/raw/main/conky.conf' -P /etc/conky/
 
 # Enable and start ssh and samba services
+echo "Enabling sshd and smb"
 systemctl enable sshd
 systemctl start sshd
 systemctl enable smb
 systemctl start smb
 
 # Switch back to user
+echo "Switching back to $user"
 su $user
 EOF
 
 # install oh-my-posh themes
+echo "Installing oh-my-posh themes"
 mkdir ~/.poshthemes
 wget https://github.com/JanDeDobbeleer/oh-my-posh/releases/latest/download/themes.zip -O ~/.poshthemes/themes.zip
 unzip ~/.poshthemes/themes.zip -d ~/.poshthemes
@@ -44,14 +53,23 @@ chmod u+rw ~/.poshthemes/*.omp.*
 rm ~/.poshthemes/themes.zip
 
 # Pidgin plugin
+echo "Downloading Google chat plugin"
 git clone https://github.com/EionRobb/purple-googlechat/ && cd purple-googlechat
-make && sudo make install
+echo "Google Chat Make"
+make
+echo "Google Chat Make install"
+sudo make install
 
 # notepadqq installation
+cd $home
+echo "Downloading notepadqq"
 git clone --recursive https://github.com/notepadqq/notepadqq.git
 cd notepadqq
+echo "Configuring notepadqq install"
 ./configure --prefix /usr 2>> errors.txt
+echo "notepadqq make"
 make 2>> errors.txt
+echo "notepadqq make install"
 sudo make install 2>> errors.txt
 
 # Download fonts
