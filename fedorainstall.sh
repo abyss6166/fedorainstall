@@ -12,7 +12,7 @@ dnf upgrade -y  2>> errors.txt
 dnf install -y git zsh zsh-syntax-highlighting zsh-autosuggestions tilix duf pidgin cairo-dock htop conky exa ncdu bat onedrive python3-pip samba 2>> errors.txt
 
 # notepadqq dependencies
-dnf install -y qt5-qtbase-devel qt5-qttools-devel qt5-qtwebengine-devel qt5-qtwebsockets-devel qt5-qtsvg-devel uchardet qt5-qtwebchannel-devel pkgconfig 2>> errors.txt
+dnf install -y qt5-qtbase-devel qt5-qttools-devel qt5-qtwebengine-devel qt5-qtwebsockets-devel qt5-qtsvg-devel uchardet uchardet-devel qt5-qtwebchannel-devel pkgconfig 2>> errors.txt
 
 # pidgin dependencies
 dnf install -y json-glib-devel libpurple-devel glib2-devel libpurple-devel protobuf-c-devel protobuf-c-compiler
@@ -23,7 +23,8 @@ chmod +x /usr/local/bin/oh-my-posh
 
 # Conky config file
 cp /etc/conky/conky.conf /etc/conky/conky.conf.bak
-wget 'https://github.com/abyss6166/fedorainstall/raw/main/conky.conf' -O /etc/conky
+rm /etc/conky/conky.conf
+wget 'https://github.com/abyss6166/fedorainstall/raw/main/conky.conf' -P /etc/conky/
 
 # Enable and start ssh and samba services
 systemctl enable sshd
@@ -42,6 +43,10 @@ unzip ~/.poshthemes/themes.zip -d ~/.poshthemes
 chmod u+rw ~/.poshthemes/*.omp.*
 rm ~/.poshthemes/themes.zip
 
+# Pidgin plugin
+git clone https://github.com/EionRobb/purple-googlechat/ && cd purple-googlechat
+make && sudo make install
+
 # notepadqq installation
 git clone --recursive https://github.com/notepadqq/notepadqq.git
 cd notepadqq
@@ -49,18 +54,14 @@ cd notepadqq
 make 2>> errors.txt
 sudo make install 2>> errors.txt
 
-# Pidgin plugin
-git clone https://github.com/EionRobb/purple-googlechat/ && cd purple-googlechat
-make && sudo make install
-
 # Download fonts
 cd $home
 mkdir ~/.local/share/fonts
-wget 'https://github.com/abyss6166/fedorainstall/raw/main/Inconsolata for Powerline.otf' -O ~/.local/share/fonts
-wget 'https://github.com/abyss6166/fedorainstall/raw/main/MesloLGS NF Bold.ttf' -O ~/.local/share/fonts
-wget 'https://github.com/abyss6166/fedorainstall/raw/main/MesloLGS NF Bold Italic.ttf' -O ~/.local/share/fonts
-wget 'https://github.com/abyss6166/fedorainstall/raw/main/MesloLGS NF Italic.ttf' -O ~/.local/share/fonts
-wget 'https://github.com/abyss6166/fedorainstall/raw/main/MesloLGS NF Regular.ttf' -O ~/.local/share/fonts
+wget 'https://github.com/abyss6166/fedorainstall/raw/main/Inconsolata for Powerline.otf' -P ~/.local/share/fonts
+wget 'https://github.com/abyss6166/fedorainstall/raw/main/MesloLGS NF Bold.ttf' -P ~/.local/share/fonts
+wget 'https://github.com/abyss6166/fedorainstall/raw/main/MesloLGS NF Bold Italic.ttf' -P ~/.local/share/fonts
+wget 'https://github.com/abyss6166/fedorainstall/raw/main/MesloLGS NF Italic.ttf' -P ~/.local/share/fonts
+wget 'https://github.com/abyss6166/fedorainstall/raw/main/MesloLGS NF Regular.ttf' -P ~/.local/share/fonts
 fc-cache
 
 # Rainlendar install
@@ -75,7 +76,7 @@ cd OneDriveGUI
 python -m pip install -r requirements.txt
 
 # Download gtk css file
-wget 'https://github.com/abyss6166/fedorainstall/raw/main/gtk.css' -O ~/.config/gtk-3.0
+wget 'https://github.com/abyss6166/fedorainstall/raw/main/gtk.css' -P ~/.config/gtk-3.0
 
 # Download icons and theme
 cd $home
