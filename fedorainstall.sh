@@ -112,6 +112,7 @@ echo "Downloading icons and MATE theme"
 wget 'https://github.com/abyss6166/fedorainstall/raw/main/Material-Black-Cherry-3.36_1.9.3.zip'
 wget 'https://github.com/abyss6166/fedorainstall/raw/main/delft-iconpack.tar.xz'
 unzip Material-Black-Cherry-3.36_1.9.3.zip -d ~/.themes
+mkdir ~/.icons
 tar -xvf delft-iconpack.tar.xz -C ~/.icons
 
 # Entering sudo mode for Samba setup
@@ -122,7 +123,7 @@ cp /etc/samba/smb.conf /etc/samba/smb.conf.bak
 cat <<EOM >> /etc/samba/smb.conf
 
 [Downloads]
-        comment = Laptop Downloads Share
+        comment = Downloads folder Share
         path = /home/${user}/Downloads
         writeable = yes
         browsable = yes
@@ -152,3 +153,4 @@ source aliasrc 2> /dev/null
 
 zsh
 ~/OneDriveGUI/src/nohup python OneDriveGUI.py > /dev/null 2>&1&
+sudo smbpasswd -a "$user"
