@@ -92,9 +92,13 @@ fc-cache
 echo "Installing rainlendar"
 wget 'https://www.rainlendar.net/download/2.18.0/Rainlendar-Pro-2.18.0-amd64.tar.bz2'
 tar -xvf Rainlendar-Pro-2.18.0-amd64.tar.bz2
+wget 'https://github.com/abyss6166/fedorainstall/raw/main/license.r2lic' -P ~/rainlendar2
 #cd rainlendar2
 echo "Starting rainlendar"
 nohup ~/rainlendar2/rainlendar2 &
+
+# Run conky
+conky
 
 # OneDriveGUI install
 echo "Downloading OneDriveGUI"
@@ -114,6 +118,16 @@ wget 'https://github.com/abyss6166/fedorainstall/raw/main/delft-iconpack.tar.xz'
 unzip Material-Black-Cherry-3.36_1.9.3.zip -d ~/.themes
 mkdir ~/.icons
 tar -xvf delft-iconpack.tar.xz -C ~/.icons
+
+# Download btop
+wget 'https://github.com/aristocratos/btop/releases/download/v1.2.8/btop-x86_64-linux-musl.tbz'
+tar -xvf btop-x86_64-linux-musl.tbz
+btop-x86_64-linux-musl/setup.sh
+
+# Download Cairo-dock config
+echo "Downloading Cairo-dock config"
+wget 'https://github.com/abyss6166/fedorainstall/raw/main/cairo-dock.tar.gz'
+tar -xvf cairo-dock.tar.gz -C .config
 
 # Entering sudo mode for Samba setup
 echo "Setting up Samba"
