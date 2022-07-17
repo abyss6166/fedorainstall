@@ -97,9 +97,6 @@ wget 'https://github.com/abyss6166/fedorainstall/raw/main/license.r2lic' -P ~/ra
 echo "Starting rainlendar"
 nohup ~/rainlendar2/rainlendar2 &
 
-# Run conky
-conky
-
 # OneDriveGUI install
 echo "Downloading OneDriveGUI"
 git clone https://github.com/bpozdena/OneDriveGUI.git
@@ -121,8 +118,9 @@ tar -xvf delft-iconpack.tar.xz -C ~/.icons
 
 # Download btop
 wget 'https://github.com/aristocratos/btop/releases/download/v1.2.8/btop-x86_64-linux-musl.tbz'
-tar -xvf btop-x86_64-linux-musl.tbz
-btop-x86_64-linux-musl/setup.sh
+mkdir btop
+tar -xvf btop-x86_64-linux-musl.tbz -C btop
+btop/install.sh
 
 # Download Cairo-dock config
 echo "Downloading Cairo-dock config"
