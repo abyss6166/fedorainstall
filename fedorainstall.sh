@@ -141,16 +141,16 @@ restorecon -R "$home/Downloads"
 echo "restarting smb process"
 sudo systemctl restart smb
 EOF
-su $user
 
 # Download zsh config and aliasrc files
-echo "Downloading new zsh and aliasrc files"
+echo "Downloading new config and aliasrc files"
 cd $home
 wget 'https://github.com/abyss6166/fedorainstall/raw/main/.zshrc'
 wget 'https://github.com/abyss6166/fedorainstall/raw/main/aliasrc'
+
+echo "Sourcing files"
 source .zshrc 2> /dev/null
 source aliasrc 2> /dev/null
 
 zsh
-~/OneDriveGUI/src/nohup python OneDriveGUI.py > /dev/null 2>&1&
 sudo smbpasswd -a "$user"
