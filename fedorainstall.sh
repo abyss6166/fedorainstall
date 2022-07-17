@@ -7,15 +7,15 @@ home=$HOME
 # Entering sudo mode
 echo "Upgrading"
 sudo su - <<EOF
-dnf upgrade -y  2>> errors.txt
+dnf upgrade -y  2>> ~/errors.txt
 
 # base packages
 echo "Installing base packages"
-dnf install -y git zsh zsh-syntax-highlighting zsh-autosuggestions tilix duf pidgin cairo-dock htop conky exa ncdu bat onedrive python3-pip samba 2>> errors.txt
+dnf install -y git zsh zsh-syntax-highlighting zsh-autosuggestions tilix duf pidgin cairo-dock htop conky exa ncdu bat onedrive python3-pip samba 2>> ~/errors.txt
 
 # notepadqq dependencies
 echo "Installing notepadqq dependencies"
-dnf install -y qt5-qtbase-devel qt5-qttools-devel qt5-qtwebengine-devel qt5-qtwebsockets-devel qt5-qtsvg-devel uchardet uchardet-devel qt5-qtwebchannel-devel pkgconfig 2>> errors.txt
+dnf install -y qt5-qtbase-devel qt5-qttools-devel qt5-qtwebengine-devel qt5-qtwebsockets-devel qt5-qtsvg-devel uchardet uchardet-devel qt5-qtwebchannel-devel pkgconfig 2>> ~/errors.txt
 
 # pidgin dependencies
 echo "Installing pidgin dependencies"
@@ -39,6 +39,9 @@ systemctl start sshd
 systemctl enable smb
 systemctl start smb
 
+# Changing shell
+sudo usermod --shell /bin/zsh "$user"
+
 # Switch back to user
 echo "Switching back to $user"
 su $user
@@ -56,9 +59,9 @@ rm ~/.poshthemes/themes.zip
 echo "Downloading Google chat plugin"
 git clone https://github.com/EionRobb/purple-googlechat/ && cd purple-googlechat
 echo "Google Chat Make"
-make
+make 2>> ~/errors.txt
 echo "Google Chat Make install"
-sudo make install
+sudo make install 2>> ~/errors.txt
 
 # notepadqq installation
 cd $home
@@ -66,13 +69,14 @@ echo "Downloading notepadqq"
 git clone --recursive https://github.com/notepadqq/notepadqq.git
 cd notepadqq
 echo "Configuring notepadqq install"
-./configure --prefix /usr 2>> errors.txt
+./configure --prefix /usr 2>> ~/errors.txt
 echo "notepadqq make"
 make 2>> errors.txt
 echo "notepadqq make install"
-sudo make install 2>> errors.txt
+sudo make install 2>> ~/errors.txt
 
 # Download fonts
+echo "Downloading fonts"
 cd $home
 mkdir ~/.local/share/fonts
 wget 'https://github.com/abyss6166/fedorainstall/raw/main/Inconsolata for Powerline.otf' -P ~/.local/share/fonts
@@ -80,30 +84,38 @@ wget 'https://github.com/abyss6166/fedorainstall/raw/main/MesloLGS NF Bold.ttf' 
 wget 'https://github.com/abyss6166/fedorainstall/raw/main/MesloLGS NF Bold Italic.ttf' -P ~/.local/share/fonts
 wget 'https://github.com/abyss6166/fedorainstall/raw/main/MesloLGS NF Italic.ttf' -P ~/.local/share/fonts
 wget 'https://github.com/abyss6166/fedorainstall/raw/main/MesloLGS NF Regular.ttf' -P ~/.local/share/fonts
+
+echo "Reloading font cache"
 fc-cache
 
 # Rainlendar install
+echo "Installing rainlendar"
 wget 'https://www.rainlendar.net/download/2.18.0/Rainlendar-Pro-2.18.0-amd64.tar.bz2'
-unzip Rainlendar-Pro-2.18.0-amd64.tar.bz2
+tar -xvf Rainlendar-Pro-2.18.0-amd64.tar.bz2
 #cd rainlendar2
+echo "Starting rainlendar"
 nohup ~/rainlendar2/rainlendar2 &
 
 # OneDriveGUI install
+echo "Downloading OneDriveGUI"
 git clone https://github.com/bpozdena/OneDriveGUI.git
 cd OneDriveGUI
 python -m pip install -r requirements.txt
 
 # Download gtk css file
+echo "Downloading new gtk css file"
 wget 'https://github.com/abyss6166/fedorainstall/raw/main/gtk.css' -P ~/.config/gtk-3.0
 
 # Download icons and theme
 cd $home
+echo "Downloading icons and MATE theme"
 wget 'https://github.com/abyss6166/fedorainstall/raw/main/Material-Black-Cherry-3.36_1.9.3.zip'
 wget 'https://github.com/abyss6166/fedorainstall/raw/main/delft-iconpack.tar.xz'
 unzip Material-Black-Cherry-3.36_1.9.3.zip -d ~/.themes
-unzip delft-iconpack.tar.xz -d ~/.icons
+tar -xvf delft-iconpack.tar.xz -C ~/.icons
 
 # Entering sudo mode for Samba setup
+echo "Setting up Samba"
 sudo su - <<EOF
 cp /etc/samba/smb.conf /etc/samba/smb.conf.bak
 
@@ -123,19 +135,20 @@ cat <<EOM >> /etc/samba/smb.conf
 EOM
 
 semanage fcontext --add --type "samba_share_t" "/home/$user/Downloads(/.*)?"
-restorecon -R ~/Downloads
+restorecon -R "$home/Downloads"
 
-systemctl restart smb
-smbpasswd -a $USER
-su $user
+echo "restarting smb process"
+sudo systemctl restart smb
 EOF
-
-# set up ZSH
-zsh
+su $user
 
 # Download zsh config and aliasrc files
+echo "Downloading new zsh and aliasrc files"
 cd $home
 wget 'https://github.com/abyss6166/fedorainstall/raw/main/.zshrc'
 wget 'https://github.com/abyss6166/fedorainstall/raw/main/aliasrc'
-source .zshrc
-source aliasrc
+source .zshrc 2> /dev/null
+source aliasrc 2> /dev/null
+
+zsh
+~/OneDriveGUI/src/nohup python OneDriveGUI.py > /dev/null 2>&1&
