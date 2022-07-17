@@ -166,5 +166,4 @@ echo "Sourcing files"
 source .zshrc 2> /dev/null
 source aliasrc 2> /dev/null
 
-zsh
 sudo smbpasswd -a "$user"
