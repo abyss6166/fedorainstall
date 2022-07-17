@@ -120,7 +120,9 @@ tar -xvf delft-iconpack.tar.xz -C ~/.icons
 wget 'https://github.com/aristocratos/btop/releases/download/v1.2.8/btop-x86_64-linux-musl.tbz'
 mkdir btop
 tar -xvf btop-x86_64-linux-musl.tbz -C btop
-btop/install.sh
+cd ~/btop
+./install.sh
+cd $home
 
 # Download Cairo-dock config
 echo "Downloading Cairo-dock config"
